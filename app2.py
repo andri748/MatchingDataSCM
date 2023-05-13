@@ -18,6 +18,7 @@ ni = connect2.df_niel.rename(columns={"AIRING_DATE":"AIRING_DATE_NIEL","AIRING_T
 
 gn1 = gn.get(["AIRING_DATE_GEN","AIRING_TIME_GEN","PROGRAM_NAME_GEN","PRODUCT_NAME_GEN","PROD_VERSION_NAME_GEN"
 ,"MO_NO","PO_TYPE","PROD_CODE","PROD_VERSION","ROW_ID_SLOT","ROW_ID_SPOT","PROD_GROUP_GEN"])
+
 ni1 = ni.get(["AIRING_DATE_NIEL","AIRING_TIME_NIEL", "PROGRAM_NAME_NIEL","PRODUCT_NAME_NIEL", "PROD_GROUP_NIEL","RID_NIELSEN","CALC_DATE"])
 
 print("shape gen : ", gn1.shape)
@@ -35,11 +36,11 @@ gen_24to30 = pd.DataFrame()
 for i in range(len(gn1['AIRING_TIME_GEN'])):
    if '00000000' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '08000000' :
     gen_0to8 = gen_0to8.append(gn1.loc[i], ignore_index=True)
-   elif '08000001' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '16000000' :
+   elif '07550000' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '16000000' :
     gen_8to16 = gen_8to16.append(gn1.loc[i], ignore_index=True)
-   elif '16000001' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '24000000' :
+   elif '15550000' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '24000000' :
     gen_16to24 = gen_16to24.append(gn1.loc[i], ignore_index=True)
-   elif '24000001' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '30000000' :
+   elif '23550000' <= gn1.loc[i, 'AIRING_TIME_GEN'] <= '30000000' :
     gen_24to30 = gen_24to30.append(gn1.loc[i], ignore_index=True)
 print("=========================================")
 jumlah_gen = len(gen_0to8) + len(gen_8to16) + len(gen_16to24) + len(gen_24to30)
@@ -54,12 +55,12 @@ niel_24to30 = pd.DataFrame()
 for i in range(len(ni1['AIRING_TIME_NIEL'])):
    if '00000000' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '08000000' :
     niel_0to8 = niel_0to8.append(ni1.loc[i], ignore_index=True)
-   elif '08000001' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '16000000' :
+   elif '07550000' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '16000000' :
     niel_8to16 = niel_8to16.append(ni1.loc[i], ignore_index=True)
-   elif '16000001' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '24000000' :
+   elif '15550000' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '24000000' :
     niel_16to24 = niel_16to24.append(ni1.loc[i], ignore_index=True)
-   elif '24000001' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '30000000' :
-    niel_24to30 = niel_24to30.append(ni1.loc[i], ignore_index=True)   
+   elif '23550000' <= ni1.loc[i, 'AIRING_TIME_NIEL'] <= '30000000' :
+    niel_24to30 = niel_24to30.append(ni1.loc[i], ignore_index=True)
 print("=========================================")
 jumlah_niel = len(niel_0to8) + len(niel_8to16) + len(niel_16to24) + len(niel_24to30)
 print("jumlah niel : ", jumlah_niel)
@@ -69,11 +70,8 @@ gen_0to8 = gen_0to8.append(gen_24to30, ignore_index = True)
 niel_0to8 = niel_0to8.append(niel_24to30, ignore_index = True)
 #merge berdasarkan waktu 
 df_0to8 = gen_0to8.merge(niel_0to8, how = 'inner')
-print("jumlah data jam 12 malem - 8 pagi:", df_0to8)
 df_8to16 = gen_8to16.merge(niel_8to16,how='inner')
-print("jumlah data jam 8 pagi - 4 sore:", df_0to8)
 df_16to24 = gen_16to24.merge(niel_16to24,how='inner')
-print("jumlah data jam 4 sore - 12 malem:", df_0to8)
 #append semuanya
 df0 = df_0to8.append(df_8to16)
 df = df0.append(df_16to24)
@@ -130,20 +128,16 @@ dataSCM = pd.DataFrame()
 data_sort = df.sort_values(by=['AIRING_TIME_NIEL'], ascending = False)
 dataSCM = dataSCM.append(data_sort, ignore_index=True)
 
-"""##PROSES COBA - COBA
-###data siang interval 900
-"""
-
 hasil0 = pd.DataFrame()
 for i in range(len(dataSCM["PROGRAM_NAME_NIEL"])):
   #if len(data1.loc[i,"TX_TIME"]) >
- if dataSCM.loc[i,"AIRING_TIME_GEN"] <= '0430000':
+ if dataSCM.loc[i,"AIRING_TIME_GEN"] <= '04300000':
   conv_gen = int(dataSCM.loc[i,'AIRING_TIME_GEN']) + 24000000
   hasil = int(dataSCM.loc[i,'AIRING_TIME_NIEL']) - conv_gen  
  else : 
   hasil = int(dataSCM.loc[i,'AIRING_TIME_NIEL']) - int(dataSCM.loc[i,'AIRING_TIME_GEN']) 
- if hasil <= 900 :     
-  if hasil >= -900 :
+ if hasil <= 1000 :     
+  if hasil >= -1000 :
      sel1 = dataSCM.loc[i]
      hasil0 = hasil0.append(sel1, ignore_index=True)
 hasil0akur  = pd.DataFrame()
@@ -201,7 +195,7 @@ for i in range(len(hasil0['PROD_GROUP_GEN'])):
 hasil1 = pd.DataFrame()
 for i in range(len(dataSCM["PROGRAM_NAME_NIEL"])):
   #if len(data1.loc[i,"TX_TIME"]) >
- if dataSCM.loc[i,"AIRING_TIME_GEN"] <= '0430000':
+ if dataSCM.loc[i,"AIRING_TIME_GEN"] <= '04300000':
   conv_gen = int(dataSCM.loc[i,'AIRING_TIME_GEN']) + 24000000
   hasil = int(dataSCM.loc[i,'AIRING_TIME_NIEL']) - conv_gen
  else : 
@@ -234,7 +228,7 @@ for i in range(len(hasil1['PRODUCT_NAME_GEN'])):
 
 def getSimularityPartialScore(str1,str2):
     return fuzz.token_set_ratio(str1.lower(), str2.lower())
-#hasil1akur  = pd.DataFrame()
+
 
 for i in range(len(hasil1['PRODUCT_NAME_GEN'])):
  a = str(hasil1.loc[i, 'PRODUCT_NAME_GEN'])
@@ -308,47 +302,47 @@ hasil_tmp = hasil_tmp.append(hasil_akhir, ignore_index=True)
 print("=========================================")
 print("Shape :", hasil_tmp.shape)
 print("HASIL MATCH SUCCESS CREATED")
-print(hasil_tmp)
+#print(hasil_tmp)
+
 
 #hasil_tmp.to_excel('match_sctv.xlsx')
-
-create_table = """CREATE TABLE MATCHING_GENSCTV(AIRING_DATE_GEN DATE,
-                AIRING_DATE_NIEL DATE,
-                AIRING_TIME_GEN VARCHAR(25),
-                AIRING_TIME_NIEL VARCHAR(25),
-                PROGRAM_NAME_NIEL VARCHAR(100),
-                PROGRAM_NAME_GEN VARCHAR(100),
-                PRODUCT_NAME_GEN VARCHAR(100),
-                PRODUCT_NAME_NIEL VARCHAR(100),
-                PROD_GROUP_NIEL VARCHAR(100),
-                PROD_GROUP_GEN VARCHAR(100),
-                PROD_VERSION_NAME_GEN	VARCHAR(100),
-                MO_NO VARCHAR(30),
-                PO_TYPE VARCHAR(30),
-                PROD_CODE VARCHAR(30),
-                PROD_VERSION VARCHAR(30),
-                ROW_ID_SLOT VARCHAR(50),
-                ROW_ID_SPOT	VARCHAR(50),
-                RID_NIELSEN	VARCHAR(50),
-                CALC_DATE DATE)"""
-con = cx_Oracle.connect('SCTV_READ','sctv_read',cx_Oracle.makedsn('172.17.32.37',1521,'GENSCTV'))
-cur = con.cursor()
-#cur.execute("DROP TABLE MATCHING_GENSCTV")
-cur.execute(create_table)
-
 with open("log_sch2.txt", "a") as f:
-  now = datetime.now()
-  date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-  print("====================================", file = f)
-  print("Date and Time:",date_time, file=f)
-  end = time.time()
-  print("Duration Running (Sec) : ",end - start, file = f)
-  print("Shape gen awal :", gn1.shape, file=f)
-  print("Shape niel awal :", ni1.shape, file=f)
-  print("Shape hasil : ", hasil_tmp.shape, file=f)
-  print(hasil_tmp.head(), file=f)
+      now = datetime.now()
+      date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+      print("====================================", file = f)
+      print("Date and Time:",date_time, file=f)
+      end = time.time()
+      print("Duration Running (Sec) : ",end - start, file = f)
+      print("Shape gen awal :", gn1.shape, file=f)
+      print("Shape niel awal :", ni1.shape, file=f)
+      print("Shape hasil : ", hasil_tmp.shape, file=f)
+      print(hasil_tmp.head(), file=f)
 
-insert_data = '''INSERT INTO MATCHING_GENSCTV(AIRING_DATE_GEN,
+# create_table = """CREATE TABLE MATCHING_SCTV(AIRING_DATE_GEN DATE,
+#                 AIRING_DATE_NIEL DATE,
+#                 AIRING_TIME_GEN VARCHAR(25),
+#                 AIRING_TIME_NIEL VARCHAR(25),
+#                 PROGRAM_NAME_NIEL VARCHAR(100),
+#                 PROGRAM_NAME_GEN VARCHAR(100),
+#                 PRODUCT_NAME_GEN VARCHAR(100),
+#                 PRODUCT_NAME_NIEL VARCHAR(100),
+#                 PROD_GROUP_NIEL VARCHAR(100),
+#                 PROD_GROUP_GEN VARCHAR(100),
+#                 PROD_VERSION_NAME_GEN	VARCHAR(100),
+#                 MO_NO VARCHAR(30),
+#                 PO_TYPE VARCHAR(30),
+#                 PROD_CODE VARCHAR(30),
+#                 PROD_VERSION VARCHAR(30),
+#                 ROW_ID_SLOT VARCHAR(50),
+#                 ROW_ID_SPOT	VARCHAR(50),
+#                 RID_NIELSEN	VARCHAR(50),
+#                 CALC_DATE DATE)"""
+con = cx_Oracle.connect('sctv_read','sctv_read',cx_Oracle.makedsn('172.17.32.62',1521,'GENSCTV'))
+cur = con.cursor()
+# cur.execute("DROP TABLE MATCHING_SCTV")
+# cur.execute(create_table)
+
+insert_data = '''INSERT INTO MATCHING_SCTV(AIRING_DATE_GEN,
                 AIRING_DATE_NIEL,
                 AIRING_TIME_GEN,
                 AIRING_TIME_NIEL,
@@ -371,10 +365,9 @@ insert_data = '''INSERT INTO MATCHING_GENSCTV(AIRING_DATE_GEN,
 rows = [tuple(x) for x in hasil_tmp.values]
 cur.executemany(insert_data, rows)
 con.commit()
-cur2 = con.cursor()
-cur2.execute("SELECT * FROM MATCHING_GENSCTV")
-print(cur2.fetchall())
 cur.close()
-cur2.close()
 con.close()
+
+end = time.time()
+print("Duration (s) : ",end - start)
 print("Table Match Succesfully Created")
