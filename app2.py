@@ -259,7 +259,7 @@ for i in range(len(hasil1['PROD_GROUP_NIEL'])):
  else :
   continue
 
-"""###GABUNGIN intv 900 dan 6000"""
+"""###GABUNGIN intv 1000 dan 6000"""
 
 hasil_gb_siang = pd.DataFrame()
 hasil0akur  = hasil0akur.drop_duplicates()
