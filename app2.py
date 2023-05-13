@@ -130,7 +130,6 @@ dataSCM = dataSCM.append(data_sort, ignore_index=True)
 
 hasil0 = pd.DataFrame()
 for i in range(len(dataSCM["PROGRAM_NAME_NIEL"])):
-  #if len(data1.loc[i,"TX_TIME"]) >
  if dataSCM.loc[i,"AIRING_TIME_GEN"] <= '04300000':
   conv_gen = int(dataSCM.loc[i,'AIRING_TIME_GEN']) + 24000000
   hasil = int(dataSCM.loc[i,'AIRING_TIME_NIEL']) - conv_gen  
