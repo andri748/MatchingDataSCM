@@ -7,7 +7,7 @@ from datetime import datetime
 import time
 start = time.time()
 
-"""###LOAD DATASET"""
+"""LOAD DATASET"""
 
 gn = connect.df_gen.rename(columns={"AIRING_DATE":"AIRING_DATE_GEN","AIRING_TIME":"AIRING_TIME_GEN","PROGRAM_NAME":"PROGRAM_NAME_GEN", 
 "PRODUCT_NAME":"PRODUCT_NAME_GEN","PROD_VERSION_NAME": "PROD_VERSION_NAME_GEN","PROD_GROUP":"PROD_GROUP_GEN"})
@@ -78,7 +78,7 @@ print("=========================================")
 print("Dataset Shape :", df.shape)
 print("DATA 04.30 to 23.59 SUCCESS merge")
 
-"""###RAPIHIN DATA"""
+"""RAPIHIN DATA KOLOM"""
 df = df.drop(["MERGE"], axis=1)
 ardate2 = df['AIRING_DATE_NIEL']
 df.drop(labels=['AIRING_DATE_NIEL'], axis=1,inplace = True)
@@ -117,8 +117,8 @@ df.drop(labels=['PROD_GROUP_GEN'], axis=1,inplace = True)
 df.insert(9, 'PROD_GROUP_GEN', pg3)
 
 
-"""#FILTERING
-##Data Processing
+"""FILTERING
+Data Processing
 """
 
 dataSCM = pd.DataFrame()
@@ -187,7 +187,7 @@ for i in range(len(hasil0['PROD_GROUP_GEN'])):
   continue
 # hasil0akur
 
-"""###data siang interval 6000"""
+"""data siang interval 6000"""
 hasil1 = pd.DataFrame()
 for i in range(len(dataSCM["PROGRAM_NAME_NIEL"])):
   #if len(data1.loc[i,"TX_TIME"]) >
@@ -204,9 +204,7 @@ for i in range(len(dataSCM["PROGRAM_NAME_NIEL"])):
     continue
 # hasil1
 
-"""###FUZZY WUZZY interval 6000
-###prod_name dan product_name
-"""
+"""FUZZY WUZZY interval 6000 menggunakan kolom prod_name dan product_name"""
 
 hasil1akur  = pd.DataFrame()
 for i in range(len(hasil1['PRODUCT_NAME_GEN'])):
@@ -220,7 +218,7 @@ for i in range(len(hasil1['PRODUCT_NAME_GEN'])):
   continue
 # hasil1akur
 
-"""###prod_name dan prod_GROUP"""
+"""pencocokan kolom prod_name dan prod_GROUP"""
 
 def getSimularityPartialScore(str1,str2):
     return fuzz.token_set_ratio(str1.lower(), str2.lower())
@@ -255,7 +253,7 @@ for i in range(len(hasil1['PROD_GROUP_NIEL'])):
  else :
   continue
 
-"""###GABUNGIN intv 900 dan 6000"""
+"""PENGGABUNGAN INTERVAL 1000 dan 6000"""
 
 hasil_gb_siang = pd.DataFrame()
 hasil0akur  = hasil0akur.drop_duplicates()
