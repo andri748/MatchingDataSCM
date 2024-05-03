@@ -338,7 +338,7 @@ with open("log_sch.txt", "a") as f:
   print(hasil_tmp.head(), file=f)
 print("   FINISH   ")
 
-insert_data = '''INSERT INTO MATCHING_GENSCTV(AIRING_DATE_GEN,
+insert_data = '''INSERT INTO MATCHING_GENIVM(AIRING_DATE_GEN,
                 AIRING_DATE_NIEL,
                 AIRING_TIME_GEN,
                 AIRING_TIME_NIEL,
